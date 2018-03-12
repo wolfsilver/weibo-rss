@@ -144,7 +144,7 @@ function getUserInfo(uid) {
             containerId: containerId
           };
           // 去除多余空白字符
-          dataStr = JSON.stringify(resultObj);
+          let dataStr = JSON.stringify(resultObj);
           // 设置1天缓存
           cache.set(key, dataStr, 86400);
           resolve(resultObj);
@@ -174,7 +174,7 @@ function getDetials(id, uid) {
             }
           });
         }).then(function (res) {
-          data = res.data;
+          let data = res.data;
           // 获取微博数据
           data = data.data;
           // 设置缓存
