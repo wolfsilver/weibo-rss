@@ -78,8 +78,8 @@
     </div>
   </div>
 </body>
-<script src="js/jquery-3.2.1.min.js"></script>
-<script src="js/clipboard.min.js"></script>
+<script src="//unpkg.com/jquery@3.2.1/dist/jquery.min.js"></script>
+<script src="//unpkg.com/clipboard@2.0.0/dist/clipboard.min.js"></script>
 <script>
 var prefix = {
   inoreader: "https://www.inoreader.com/?add_feed=",
@@ -88,7 +88,7 @@ var prefix = {
 };
 
 // 初始化Clipboard插件
-var clipboard = new Clipboard('#copy-btn');
+var clipboard = new ClipboardJS('#copy-btn');
 clipboard.on('success', function(e) {
   console.log(e);
 });
