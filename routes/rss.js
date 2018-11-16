@@ -8,10 +8,21 @@ var cache = require('../common/cache');
 
 var router = express.Router();
 
+// 微博缓存时间（分钟）
+const TTL = 15;
+
 /* GET weibo rss. */
 router.get('/:id', function(req, res, next) {
-  // 传入微博用户的uid
   var uid = req.params['id'];
+  // 参数设定
+  var largePic = req.query.largePic ? !!parseInt(req.query.largePic) : true;
+  var emoji = req.query.emoji ? !!parseInt(req.query.emoji) : false;
+  var options = {
+    largePic,
+    ttl: TTL,
+    emoji
+  };
+
   // 获取 IP地址
   var ip = req.headers['x-forwarded-for'] ||
   req.connection.remoteAddress ||
@@ -19,26 +30,24 @@ router.get('/:id', function(req, res, next) {
   req.connection.socket.remoteAddress;
 
   // 验证参数格式
-  if (!/^[0-9]*$/.test(uid)) {
-    console.log("Invalid Format");
+  if (!/^[0-9]{10}$/.test(uid)) {
+    logger.error(`Invalid Format ${uid} ${ip}`);
     return next();
   }
 
-  logger.info(`get weibo of uid: ${uid} - IP: ${ip}`);
+  logger.info(`get ${uid} ${ip}`);
 
-  // 读取缓存
-  var key = `weibo-rss-total-${uid}`;
+  var key = `total-${uid}${largePic ? '' : '-small'}${emoji ? '-emoji' : ''}`;
   cache.get(key).then(function (result) {
     if (result) {
       return Promise.resolve(result);
     } else {
       // 抓取
-      return weibo.fetchRSS(uid).then(function (data) {
-        // 存入缓存
-        cache.set(key, data, 900);
+      return weibo.fetchRSS(uid, options).then(function (data) {
+        cache.set(key, data, TTL * 60);
         return Promise.resolve(data);
       }).catch(function (err) {
-        logger.error(`Error - ${err} - uid: ${uid} - IP: ${ip}`);
+        logger.error(`${err} - uid: ${uid} - IP: ${ip}`);
         return Promise.reject();
       });
     }
