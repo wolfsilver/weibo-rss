@@ -187,7 +187,7 @@ function getDetail (id) {
   return cache.get(key).then(function(result) {
     if (result) {
       return result;
-    } 
+    }
     return contentQueue.add(function() {
       return axiosInstance.get('https://m.weibo.cn/statuses/show?id=' + id, {
         headers: {
@@ -201,7 +201,7 @@ function getDetail (id) {
           return data;
         });
     });
-    
+
   });
 }
 
