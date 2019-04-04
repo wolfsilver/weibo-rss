@@ -1,0 +1,14 @@
+{
+    "apps": {
+        "name": "weibo",
+        "script": "./bin/www",
+        "log": "./logs/weibo.log",
+        "watch": true,
+        "ignore_watch": [
+            "node_modules",
+            "public",
+            "data",
+            "logs"
+        ]
+    }
+}

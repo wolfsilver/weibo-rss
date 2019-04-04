@@ -39,9 +39,16 @@ exports.fetchRSS = function(uid, options) {
   if (options.emoji === undefined) {
     options.emoji = false;
   }
+  // 返回json
+  if (options.json === undefined) {
+    options.json = false;
+  }
   // 获取微博
   return getWeibo(uid)
     .then(function(weiboData) {
+      if (options.json) {
+        return JSON.stringify(weiboData);
+      }
       // metadata
       var feed = new RSS({
         site_url: "https://weibo.com/" + weiboData.user.id,
